@@ -1,4 +1,4 @@
-# virtual_therapy_app
+# Posto - IC
 
 A new Flutter project.
 
