@@ -1,8 +1,21 @@
-# Posto - IC
+# 🚑 Posto - IC
 
-A new Flutter project.
+A **Flutter** project for health center management.  
 
-## Getting Started
+---
+
+## ▶️ Getting Started
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/your-username/posto-ic.git
+cd posto
+
+dart run build_runner watch -d
+
+flutter run
+
+```
 
 This project is a starting point for a Flutter application.
 

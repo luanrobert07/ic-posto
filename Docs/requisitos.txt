@@ -1,6 +1,0 @@
-- Sistema para gerenciar agendamentos
-- Chat com os pacientes
-- localizacao do paciente?
-- alertar o paciente de consultas
-- separar medico e agente do psf
-- sistema de avisos
