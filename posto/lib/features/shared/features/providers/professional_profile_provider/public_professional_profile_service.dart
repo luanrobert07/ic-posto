@@ -4,7 +4,6 @@ import 'package:posto/core/utils/cloud_functions_endpoints.dart';
 import 'package:posto/features/shared/features/providers/professional_profile_provider/professional_profile.dart';
 import 'package:posto/features/shared/features/appointment/models/appointment.dart';
 import '../../../../../core/services/firestore_service/firestore_service.dart';
-import '../../dialogs/error_dialog.dart';
 
 part 'public_professional_profile_service.g.dart';
 

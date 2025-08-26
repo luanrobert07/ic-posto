@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:posto/features/patient/search_professionals/logic/search_professional_service.dart';
 import 'package:posto/features/patient/search_professionals/state_management/search_professional_state.dart';

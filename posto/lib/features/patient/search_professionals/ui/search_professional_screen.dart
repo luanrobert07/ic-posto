@@ -15,7 +15,15 @@ class SearchProfessionalScreen extends StatelessWidget {
   }
 
   Widget webPage(BuildContext context) {
-    return Center(
+  return Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [Color(0xFFF8FAFC), Color(0xFFF1F5F9)],
+      ),
+    ),
+    child: Center(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -24,6 +32,10 @@ class SearchProfessionalScreen extends StatelessWidget {
               onPressed: () {
                 context.pop();
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey[100],
+                foregroundColor: Colors.black,
+              ),
               child: const Text('Voltar'),
             ),
             const SizedBox(height: 25),
@@ -31,8 +43,10 @@ class SearchProfessionalScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget mobilePage(BuildContext context) {
     return const Placeholder();
