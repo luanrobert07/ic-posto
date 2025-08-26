@@ -355,6 +355,7 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
                         await showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
+                            backgroundColor: Colors.grey[200],
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
