@@ -44,13 +44,33 @@ class SlotGenerator {
       return _slotsCache[normalizedDay]!;
     }
 
-    final slots = _generateSlots(normalizedDay);
-    _slotsCache[normalizedDay] = slots;
+    final slots = _generateShiftedSlotsForMonth(normalizedDay);
+    _slotsCache.addAll(slots);
 
-    return slots;
+    return _slotsCache[normalizedDay] ?? [];
   }
 
-  List<DateTime> _generateSlots(DateTime selectedDay) {
+  Map<DateTime, List<DateTime>> _generateShiftedSlotsForMonth(DateTime month) {
+    final startDate = DateTime(month.year, month.month, 1).subtract(const Duration(days: 1));
+    final endDate = DateTime(month.year, month.month + 1, 1).add(const Duration(days: 1));
+    final Map<DateTime, List<DateTime>> result = {};
+
+    for (DateTime day = startDate; day.isBefore(endDate); day = day.add(const Duration(days: 1))) {
+      final daySlots = _generateSlotsForDay(day);
+
+      result[day] ??= [];
+
+      for (final slot in daySlots) {
+        final localDay = _removeTimeFromDateTime(slot);
+        result[localDay] ??= [];
+        result[localDay]!.add(slot);
+      }
+    }
+
+    return result;
+  }
+
+  List<DateTime> _generateSlotsForDay(DateTime selectedDay) {
     final dayIndex = _weekdayFromDay(selectedDay);
     List<WorkPeriod> workPeriods = weeklySchedule[dayIndex];
     final now = DateTime.now();
@@ -58,6 +78,7 @@ class SlotGenerator {
     final allSlots = <DateTime>[];
     final int shiftOffset = Utils.getTimezoneOffset() - timezoneOffset;
 
+    if (selectedDay.isBefore(now.subtract(Duration(days: 1)))) return [];
     if (sessionDuration == 0) return [];
 
     final List<WorkPeriod> newWorkPeriods = [];
@@ -76,7 +97,7 @@ class SlotGenerator {
 
       for (int t = startMins; t + sessionDuration <= endMins; t += sessionDuration) {
         final slot = selectedDay.add(Duration(minutes: t));
-        
+
         if (slot.isBefore(now)) continue;
         if (_isSlotUsed(slot, usedSlots)) continue;
 
@@ -130,7 +151,7 @@ class SlotGenerator {
 
   int _weekdayFromDay(DateTime day) {
     int weekday = day.weekday;
-    // Moves sunday from last to first
+    // Moves sunday from last to first day
     if (weekday == 7) {
       weekday = 0;
     }
@@ -144,9 +165,5 @@ class SlotGenerator {
         .where((a) => Utils.isSameDay(a.start.toDate(), selectedDay))
         .map((a) => a.start.toDate().toUtc())
         .toList();
-  }
-
-  bool isDayAvailableForAppointments(DateTime day) {
-    return weeklySchedule[_weekdayFromDay(day)].isNotEmpty;
   }
 }
