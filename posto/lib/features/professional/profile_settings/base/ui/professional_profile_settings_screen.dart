@@ -52,13 +52,13 @@ class _ProfessionalProfileSettingsScreenState extends ConsumerState<Professional
                 hint: 'Contato',
               ),
 
-              // const SizedBox(height: 25),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     context.push('/professional/profile_settings/schedule_exceptions');
-              //   },
-              //   child: const Text("Schedule Exceptions"),
-              // ),
+              const SizedBox(height: 25),
+              ElevatedButton(
+                onPressed: () async {
+                  context.push('/professional/profile_settings/schedule_exceptions');
+                },
+                child: const Text("Schedule Exceptions"),
+              ),
 
               const SizedBox(height: 25),
               const ScheduleSettings(),
