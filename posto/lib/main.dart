@@ -49,7 +49,7 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'Virtual Therapy App',
-      theme: CustomTheme.darkTheme,
+      theme: CustomTheme.lightTheme,
       themeMode: ThemeMode.dark,
       routerConfig: goRouter,
       localizationsDelegates: const [

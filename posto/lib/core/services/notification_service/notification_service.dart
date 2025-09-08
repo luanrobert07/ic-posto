@@ -126,9 +126,9 @@ class NotificationService extends _$NotificationService {
 
     print('notification professional handler');
 
-    if (_hasPendingAppointments(oldProfile, profile)) {
-      _showAppointmentNotification();
-    }
+    // if (_hasPendingAppointments(oldProfile, profile)) {
+    //   _showAppointmentNotification();
+    // }
 
     state = state.copyWith(
       chatNotifications: profile.chatNotifications,

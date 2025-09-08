@@ -113,7 +113,15 @@ class _PatientHomeScreenState extends ConsumerState<PatientHomeScreen> {
                         "Agende e gerencie",
                         Icons.calendar_today_outlined,
                         const Color(0xFF10B981),
-                        () => context.push('/patient/appointments'),
+                            () => context.push('/patient/appointments'),
+                      ),
+                      _buildCleanNavigationCard(
+                        context,
+                        "Meus chats",
+                        "Tire dúvidas e troque mensagens",
+                        Icons.chat_bubble_outline_rounded,
+                        const Color(0xFF10B981),
+                            () => context.push('/patient/chats'),
                       ),
                       _buildCleanNavigationCard(
                         context,

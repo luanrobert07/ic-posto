@@ -18,7 +18,7 @@ class MedicalColors {
 }
 
 class ProfessionalHomeScreen extends ConsumerStatefulWidget {
-  const ProfessionalHomeScreen({Key? key}) : super(key: key);
+  const ProfessionalHomeScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ProfessionalHomeScreenState();
@@ -291,6 +291,9 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
                 }),
                 _buildSaaSNavItem(Icons.calendar_today_outlined, 'Agenda', false, isCompact: isCompact, onTap: () {
                   context.push('/professional/appointments');
+                }),
+                _buildSaaSNavItem(Icons.chat_bubble_outline_rounded, 'Chats', false, isCompact: isCompact, onTap: () {
+                  context.push('/professional/chats');
                 }),
                 _buildSaaSNavItem(Icons.people_outline, 'Pacientes', false, isCompact: isCompact, onTap: () {}),
                 _buildSaaSNavItem(Icons.medical_services_outlined, 'Consultas', false, isCompact: isCompact, onTap: () {}),

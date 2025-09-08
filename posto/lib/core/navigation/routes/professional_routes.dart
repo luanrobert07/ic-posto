@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:posto/core/auth/logic/auth_service.dart';
 import 'package:posto/features/professional/appointments/ui/professional_appointments_screen.dart';
 
+import '../../../features/professional/chats/ui/professional_chats_screen.dart';
 import '../../../features/professional/profile_settings/base/ui/professional_profile_settings_screen.dart';
 import '../../../features/professional/profile_settings/schedule_exceptions/ui/schedule_exceptions_screen.dart';
 import '../../../features/professional/home/ui/professional_home_screen.dart';
@@ -63,6 +64,11 @@ List<GoRoute> professionalRoutes = [
         path: '/appointments',
         builder: (context, state) => const ProfessionalAppointmentsScreen(),
         redirect: _checkAccess,
+      ),
+      GoRoute(
+        path: '/chats',
+        redirect: _checkAccess,
+        builder: (context, state) => ProfessionalChatsScreen(),
       ),
     ],
   ),
