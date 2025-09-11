@@ -61,7 +61,6 @@ class BookAppointmentNotifier extends _$BookAppointmentNotifier {
   }
 
   bool isDayAvailableForAppointments(DateTime day) {
-    if (!_slotGenerator.isDayAvailableForAppointments(day)) return false;
     if (getAppointmentsSlots(day).isEmpty) return false;
 
     return true;

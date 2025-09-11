@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:posto/core/utils/utils.dart';
 import 'package:posto/features/patient/book_appointment/state_management/book_appointment_provider.dart';
 import 'package:posto/features/patient/book_appointment/state_management/book_appointment_state.dart';
@@ -8,6 +9,7 @@ import 'package:posto/features/shared/screens/base_page.dart';
 
 import '../../../../core/auth/logic/auth_service.dart';
 import '../../../shared/features/dialogs/error_dialog.dart';
+import '../../chats/state_management/patient_chats_provider.dart';
 
 class BookAppointmentScreen extends ConsumerStatefulWidget {
   const BookAppointmentScreen({super.key});
@@ -115,6 +117,16 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
                       ],
                     ),
                   ),
+
+                  ElevatedButton(
+                    onPressed: () {
+                      final String uid = AuthService.getUserUid()!;
+                      ref.read(patientChatsNotifierProvider(uid).notifier).setTempChat(state.profile!);
+                      context.push('/patient/chats');
+                    },
+                    child: Text('Open chat'),
+                  ),
+                  const SizedBox(height: 16),
 
                   Container(
                     width: double.infinity,

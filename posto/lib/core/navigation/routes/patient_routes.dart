@@ -7,6 +7,7 @@ import 'package:posto/features/patient/book_appointment/ui/book_appointment_scre
 import 'package:posto/features/patient/home/ui/patient_home_screen.dart';
 import 'package:posto/features/patient/search_professionals/ui/search_professional_screen.dart';
 
+import '../../../features/patient/chats/ui/patient_chats_screen.dart';
 import '../../../features/patient/profile_settings/ui/patient_profile_settings_screen.dart';
 import '../../auth/state_management/user_type.dart';
 import '../../auth/logic/auth_service.dart';
@@ -69,6 +70,11 @@ List<GoRoute> patientRoutes = [
         path: '/appointments',
         builder: (context, state) => const PatientAppointmentsScreen(),
         redirect: _checkAccess,
+      ),
+      GoRoute(
+        path: '/chats',
+        redirect: _checkAccess,
+        builder: (context, state) => const PatientChatsScreen(),
       ),
     ],
   ),

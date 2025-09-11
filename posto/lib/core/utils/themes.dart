@@ -5,18 +5,18 @@ CustomTheme currentTheme = CustomTheme();
 class CustomTheme with ChangeNotifier {
   static ThemeData get lightTheme {
     _CustomColorPalette colorPalette = const _CustomColorPalette(
-      dominantColor: Color(0xff16e24d),
-      accentColorBasic: Color(0xff19cc97),
-      accentColorDetail: Color(0xff00ff44),
-      accentColorFront: Color(0xFFE7E7E7),
-      accentColorBack: Color(0xFFE3E3E3),
-      textColor: Color(0xFF111111),
+      dominantColor: Color(0xFF64748B),
+      accentColorBasic: Color(0xFF94A3B8),
+      accentColorDetail: Color(0xFF6B7280),
+      accentColorFront: Color(0xFFF8FAFC),
+      accentColorBack: Color(0xFFE7E7E7),
+      textColor: Color(0xFF1A1A1A),
       invertedTextColor: Color(0xFFFFFFFF),
-      fadedTextColor: Color(0xFFA8A8A8),
+      fadedTextColor: Color(0xFF6B7280),
       fadedCardColor: Color(0xFFCECECE),
       shadowColor: Color(0x3B000000),
-      errorColor: Color(0xB3FF4949),
-      correctColor: Color(0xB349FF49),
+      errorColor: Color(0xFFDC2626),
+      correctColor: Color(0xFF059669),
       shimmerBaseColor: Color(0xFF818181),
       shimmerHighlightColor: Color(0xFFE3E3E3),
     );

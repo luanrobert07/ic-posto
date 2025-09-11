@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:posto/features/patient/appointments/state_management/patient_appointments_state.dart';
 import 'package:posto/features/shared/widgets/conditional_widget.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/auth/logic/auth_service.dart';
 import '../../../shared/screens/base_page.dart';
+import '../../chats/state_management/patient_chats_provider.dart';
 import '../state_management/patient_appointments_provider.dart';
 
 class PatientAppointmentsScreen extends ConsumerStatefulWidget {
@@ -290,6 +293,36 @@ class _PatientAppointmentsScreenState extends ConsumerState<PatientAppointmentsS
                                     ],
                                   ),
                                 ),
+
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(20),
+                                    onTap: () {
+                                      final String uid = AuthService.getUserUid()!;
+                                      ref.read(patientChatsNotifierProvider(uid).notifier).setTempChat(user);
+                                      context.push('/patient/chats');
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF10B981).withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: const Text(
+                                        'Abrir chat',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF10B981),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(width: 16),
+
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                   decoration: BoxDecoration(
