@@ -1,0 +1,30 @@
+rules_version = '2';
+
+function checkUserType(auth, userType) {
+  return auth != null && auth.token.userType == userType;
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    match /professionalProfiles/{professionalId}/{document=**} {
+      allow read: if checkUserType(request.auth, 'professional')
+      	&& request.auth.uid == professionalId;
+    }
+    
+    match /patientProfiles/{patientId}/{document=**} {
+      allow read: if checkUserType(request.auth, 'patient')
+      	&& request.auth.uid == patientId;
+    }
+    
+		match /chats/{chatId} {
+      allow read: if request.auth != null 
+      	&& request.auth.uid in resource.data.participants;
+
+      match /messages/{messageId} {
+        allow read: if request.auth != null
+          && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+      }
+    }
+  }
+}
