@@ -4,7 +4,7 @@ import 'package:posto/core/auth/state_management/auth_state.dart';
 import 'user_type.dart';
 import '../logic/auth_service_supabase.dart';
 
-part 'auth_provider.g.dart';
+part 'auth_provider_supabase.g.dart';
 
 @Riverpod(keepAlive: true)
 class AuthNotifier extends _$AuthNotifier {

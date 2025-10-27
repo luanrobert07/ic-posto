@@ -2,7 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:posto/core/auth/state_management/auth_state.dart';
 
 import 'user_type.dart';
-import '../logic/auth_service_supabase.dart';
+import '../logic/auth_service.dart';
 
 part 'auth_provider.g.dart';
 
