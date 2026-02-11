@@ -62,7 +62,7 @@ class _PatientAppointmentsScreenState extends ConsumerState<PatientAppointmentsS
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width > 1200 ? 800 : MediaQuery.of(context).size.width * 0.9,
+                  maxWidth: MediaQuery.of(context).size.width > 1200 ? 640 : MediaQuery.of(context).size.width * 0.9,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

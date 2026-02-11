@@ -21,13 +21,22 @@ class ProfessionalHomeScreen extends ConsumerStatefulWidget {
   const ProfessionalHomeScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ProfessionalHomeScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ProfessionalHomeScreenState();
 }
 
-class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen> {
+class _ProfessionalHomeScreenState
+    extends ConsumerState<ProfessionalHomeScreen> {
   late ProfessionalHomeState state;
   late ProfessionalHomeNotifier notifier;
   late Map<String, dynamic> cache;
+
+  // ===== NOVA COMUNICAÇÃO (estado isolado) =====
+  final TextEditingController _commTitleController = TextEditingController();
+  final TextEditingController _commMessageController = TextEditingController();
+  final TextEditingController _commPatientController = TextEditingController();
+  String _commType = 'Aviso';
+  String _commAudience = 'Todos';
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +50,7 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
     );
   }
 
+  // ================= RESPONSIVE =================
   Widget _buildResponsiveLayout() {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth < 1200 && screenWidth >= 768;
@@ -98,6 +108,7 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
     );
   }
 
+  // ================= MOBILE =================
   Widget _buildMobileLayout() {
     return Container(
       decoration: const BoxDecoration(
@@ -150,98 +161,9 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Bem-vindo de volta!',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: MedicalColors.primary,
-                    ),
-                  ),
-                  Text(
-                    'Aqui está o resumo do seu dia',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [MedicalColors.primary.withValues(alpha: 0.8), MedicalColors.secondary.withValues(alpha: 0.8)],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.today, color: Colors.white, size: 14),
-                    const SizedBox(width: 6),
-                    const Text(
-                      'Hoje',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Próximas Consultas',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: MedicalColors.primary,
-                ),
-              ),
-              const SizedBox(height: 16),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: state.profile?.bookedAppointments.length ?? 0,
-                itemBuilder: (context, id) {
-                  final appointment = state.profile!.bookedAppointments[id];
-                  return _buildAppointmentCard(
-                    cache[appointment.patientId].name,
-                    Utils.formatTime(appointment.start.toDate()),
-                    Utils.relativeTime(appointment.start),
-                    '${Utils.formatTime(appointment.start.toDate())} ${Utils.formatDate(appointment.start.toDate())}',
-                    Icons.person,
-                  );
-                },
-              ),
+              _buildMobileAgenda(),
               const SizedBox(height: 32),
-              Text(
-                'Consultas Pendentes',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: MedicalColors.primary,
-                ),
-              ),
-              const SizedBox(height: 16),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: state.profile?.pendingAppointments.length ?? 0,
-                itemBuilder: (context, id) {
-                  final item = state.profile!.pendingAppointments[id];
-                  return _buildPendingCard(
-                    cache[item.patientId].name,
-                    '${Utils.formatTime(item.start.toDate())} ${Utils.formatDate(item.start.toDate())}',
-                  );
-                },
-              ),
+              _buildProfessionalCommunicationCard(),
             ],
           ),
         ),
@@ -249,6 +171,39 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
     );
   }
 
+  Widget _buildMobileAgenda() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Próximas Consultas',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: MedicalColors.primary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: state.profile?.bookedAppointments.length ?? 0,
+          itemBuilder: (context, id) {
+            final appointment = state.profile!.bookedAppointments[id];
+            return _buildAppointmentCard(
+              cache[appointment.patientId].name,
+              Utils.formatTime(appointment.start.toDate()),
+              Utils.relativeTime(appointment.start),
+              '${Utils.formatTime(appointment.start.toDate())} ${Utils.formatDate(appointment.start.toDate())}',
+              Icons.person,
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  // ================= SIDEBAR =================
   Widget _buildSidebar(bool isCompact) {
     return Column(
       children: [
@@ -287,30 +242,21 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                _buildSaaSNavItem(Icons.dashboard_outlined, 'Dashboard', true, isCompact: isCompact, onTap: () {
-                }),
-                _buildSaaSNavItem(Icons.calendar_today_outlined, 'Agenda', false, isCompact: isCompact, onTap: () {
-                  context.push('/professional/appointments');
-                }),
-                _buildSaaSNavItem(Icons.chat_bubble_outline_rounded, 'Chats', false, isCompact: isCompact, onTap: () {
-                  context.push('/professional/chats');
-                }),
-                _buildSaaSNavItem(Icons.people_outline, 'Pacientes', false, isCompact: isCompact, onTap: () {}),
-                _buildSaaSNavItem(Icons.medical_services_outlined, 'Consultas', false, isCompact: isCompact, onTap: () {}),
-                const SizedBox(height: 24),
-                Container(
-                  height: 1,
-                  color: Colors.white.withValues(alpha: 0.1),
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                ),
-                const SizedBox(height: 24),
-                _buildSaaSNavItem(Icons.settings_outlined, 'Configurações', false, isCompact: isCompact, onTap: () {
-                  context.push('/professional/profile_settings');
-                }),
+                _buildSaaSNavItem(Icons.dashboard_outlined, 'Dashboard', true,
+                    isCompact: isCompact),
+                _buildSaaSNavItem(Icons.calendar_today_outlined, 'Agenda', false,
+                    isCompact: isCompact,
+                    onTap: () =>
+                        context.push('/professional/appointments')),
+                _buildSaaSNavItem(Icons.chat_bubble_outline_rounded, 'Chats',
+                    false,
+                    isCompact: isCompact,
+                    onTap: () => context.push('/professional/chats')),
                 const Spacer(),
-                _buildSaaSNavItem(Icons.logout_outlined, 'Sair', false, isLogout: true, isCompact: isCompact, onTap: () async {
-                  final authService = ref.read(authServiceProvider);
-                  await authService.signOut();
+                _buildSaaSNavItem(Icons.logout_outlined, 'Sair', false,
+                    isLogout: true,
+                    isCompact: isCompact, onTap: () async {
+                  await ref.read(authServiceProvider).signOut();
                 }),
                 const SizedBox(height: 24),
               ],
@@ -321,170 +267,45 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
     );
   }
 
+  // ================= MAIN CONTENT =================
   Widget _buildMainContent(bool isTablet) {
     return Padding(
       padding: EdgeInsets.all(isTablet ? 24 : 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Bem-vindo de volta!',
-                      style: TextStyle(
-                        fontSize: isTablet ? 28 : 32,
-                        fontWeight: FontWeight.bold,
-                        color: MedicalColors.primary,
-                      ),
-                    ),
-                    Text(
-                      'Aqui está o resumo do seu dia',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [MedicalColors.primary.withValues(alpha: 0.8), MedicalColors.secondary.withValues(alpha: 0.8)],
-                  ),
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: MedicalColors.primary.withValues(alpha: 0.2),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.today, color: Colors.white, size: 16),
-                    const SizedBox(width: 8),
-                    const Text(
-                      'Hoje',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Text(
+            'Próximas Consultas',
+            style: TextStyle(
+              fontSize: isTablet ? 24 : 28,
+              fontWeight: FontWeight.bold,
+              color: MedicalColors.primary,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: ListView.builder(
+              itemCount: state.profile?.bookedAppointments.length ?? 0,
+              itemBuilder: (context, id) {
+                final appointment = state.profile!.bookedAppointments[id];
+                return _buildAppointmentCard(
+                  cache[appointment.patientId].name,
+                  Utils.formatTime(appointment.start.toDate()),
+                  Utils.relativeTime(appointment.start),
+                  '${Utils.formatTime(appointment.start.toDate())} ${Utils.formatDate(appointment.start.toDate())}',
+                  Icons.person,
+                );
+              },
+            ),
           ),
           const SizedBox(height: 32),
-          if (isTablet) ...[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Próximas Consultas',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: MedicalColors.primary,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        height: 400,
-                        child: ListView.builder(
-                          itemCount: state.profile?.bookedAppointments.length ?? 0,
-                          itemBuilder: (context, id) {
-                            final appointment = state.profile!.bookedAppointments[id];
-                            return _buildAppointmentCard(
-                              cache[appointment.patientId].name,
-                              Utils.formatTime(appointment.start.toDate()),
-                              Utils.relativeTime(appointment.start),
-                              '${Utils.formatTime(appointment.start.toDate())} ${Utils.formatDate(appointment.start.toDate())}',
-                              Icons.person,
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 24),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Consultas Pendentes',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: MedicalColors.primary,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        height: 400,
-                        child: ListView.builder(
-                          itemCount: state.profile?.pendingAppointments.length ?? 0,
-                          itemBuilder: (context, id) {
-                            final item = state.profile!.pendingAppointments[id];
-                            return _buildPendingCard(
-                              cache[item.patientId].name,
-                              '${Utils.formatTime(item.start.toDate())} ${Utils.formatDate(item.start.toDate())}',
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ] else ...[
-            Text(
-              'Próximas Consultas',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: MedicalColors.primary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: state.profile?.bookedAppointments.length ?? 0,
-                itemBuilder: (context, id) {
-                  final appointment = state.profile!.bookedAppointments[id];
-                  return _buildAppointmentCard(
-                    cache[appointment.patientId].name,
-                    Utils.formatTime(appointment.start.toDate()),
-                    Utils.relativeTime(appointment.start),
-                    '${Utils.formatTime(appointment.start.toDate())} ${Utils.formatDate(appointment.start.toDate())}',
-                    Icons.person,
-                  );
-                },
-              ),
-            ),
-          ],
+          _buildProfessionalCommunicationCard(),
         ],
       ),
     );
   }
 
+  // ================= RIGHT SIDEBAR =================
   Widget _buildRightSidebar() {
     return Padding(
       padding: const EdgeInsets.all(24),
@@ -517,7 +338,124 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
     );
   }
 
-  Widget _buildAppointmentCard(String name, String time, String relativeTime, String fullDateTime, IconData icon) {
+  // ================= NOVA COMUNICAÇÃO =================
+  Widget _buildProfessionalCommunicationCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: MedicalColors.cardShadow,
+            blurRadius: 12,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Educação em Saúde',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+
+          _commLabel('Tipo'),
+          _commChips(['Aviso', 'Lembrete', 'Campanha', 'Educação'], _commType,
+              (v) => setState(() => _commType = v)),
+
+          const SizedBox(height: 16),
+
+          _commLabel('Enviar para'),
+          _commChips(['Todos', 'Paciente'], _commAudience,
+              (v) => setState(() => _commAudience = v)),
+
+          if (_commAudience == 'Paciente') ...[
+            const SizedBox(height: 12),
+            TextField(
+              controller: _commPatientController,
+              decoration: _commInput('Paciente'),
+            ),
+          ],
+
+          const SizedBox(height: 16),
+          TextField(
+            controller: _commTitleController,
+            decoration: _commInput('Título'),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _commMessageController,
+            maxLines: 4,
+            decoration: _commInput('Mensagem'),
+          ),
+
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _sendCommunication,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: MedicalColors.primary,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              child: const Text(
+                'Enviar comunicação',
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _sendCommunication() {
+    _commTitleController.clear();
+    _commMessageController.clear();
+    _commPatientController.clear();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Comunicação enviada')),
+    );
+  }
+
+  // ================= HELPERS =================
+  Widget _commLabel(String text) =>
+      Padding(padding: const EdgeInsets.only(bottom: 6), child: Text(text));
+
+  Widget _commChips(
+    List<String> values,
+    String selected,
+    void Function(String) onSelect,
+  ) {
+    return Wrap(
+      spacing: 8,
+      children: values
+          .map((v) => ChoiceChip(
+                label: Text(v),
+                selected: v == selected,
+                onSelected: (_) => onSelect(v),
+              ))
+          .toList(),
+    );
+  }
+
+  InputDecoration _commInput(String label) => InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: MedicalColors.background,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      );
+
+  // ================= CARDS EXISTENTES =================
+  Widget _buildAppointmentCard(String name, String time, String relativeTime,
+      String fullDateTime, IconData icon) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
@@ -534,59 +472,24 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
       ),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: MedicalColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: MedicalColors.primary, size: 20),
-          ),
-          const SizedBox(width: 16),
+          Icon(icon, color: MedicalColors.primary),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  relativeTime,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF424242),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  name,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                Text(
-                  fullDateTime,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
+                Text(relativeTime,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(name),
+                Text(fullDateTime,
+                    style: const TextStyle(fontSize: 12)),
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: MedicalColors.accent.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              time,
+          Text(time,
               style: TextStyle(
-                color: MedicalColors.accent,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+                  color: MedicalColors.accent,
+                  fontWeight: FontWeight.w600)),
         ],
       ),
     );
@@ -604,28 +507,22 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            name,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF424242),
-            ),
-          ),
+          Text(name,
+              style:
+                  const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
-          Text(
-            dateTime,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.amber[900],
-            ),
-          ),
+          Text(dateTime,
+              style:
+                  TextStyle(fontSize: 12, color: Colors.amber[900])),
         ],
       ),
     );
   }
 
-  Widget _buildSaaSNavItem(IconData icon, String title, bool isActive, {bool isLogout = false, bool isCompact = false, VoidCallback? onTap}) {
+  Widget _buildSaaSNavItem(IconData icon, String title, bool isActive,
+      {bool isLogout = false,
+      bool isCompact = false,
+      VoidCallback? onTap}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2),
       child: Material(
@@ -634,31 +531,33 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
           borderRadius: BorderRadius.circular(8),
           onTap: onTap,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              color: isActive ? MedicalColors.primary.withValues(alpha: 0.15) : null,
+              color: isActive
+                  ? MedicalColors.primary.withValues(alpha: 0.15)
+                  : null,
               borderRadius: BorderRadius.circular(8),
-              border: isActive ? Border.all(color: MedicalColors.primary.withValues(alpha: 0.3)) : null,
             ),
             child: Row(
               children: [
-                Icon(
-                  icon,
-                  size: 18,
-                  color: isActive 
-                    ? MedicalColors.primary 
-                    : (isLogout ? Colors.red[400] : Colors.white.withValues(alpha: 0.85)),
-                ),
+                Icon(icon,
+                    size: 18,
+                    color: isActive
+                        ? MedicalColors.primary
+                        : (isLogout
+                            ? Colors.red[400]
+                            : Colors.white.withValues(alpha: 0.85))),
                 if (!isCompact) ...[
                   const SizedBox(width: 12),
                   Text(
                     title,
                     style: TextStyle(
-                      color: isActive 
-                        ? MedicalColors.primary 
-                        : (isLogout ? Colors.red[400] : Colors.white.withValues(alpha: 0.95)),
-                      fontSize: 14,
-                      fontWeight: isActive ? FontWeight.w500 : FontWeight.normal,
+                      color: isActive
+                          ? MedicalColors.primary
+                          : (isLogout
+                              ? Colors.red[400]
+                              : Colors.white.withValues(alpha: 0.95)),
                     ),
                   ),
                 ],

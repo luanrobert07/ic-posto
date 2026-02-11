@@ -47,28 +47,32 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAzI5603YR6q_FgBT23Xr_XsQlxOLRzpUk',
-    appId: '1:860433568497:web:dba9753d3a524f95754f50',
-    messagingSenderId: '860433568497',
-    projectId: 'app-posto-ic',
-    authDomain: 'app-posto-ic.firebaseapp.com',
-    storageBucket: 'app-posto-ic.firebasestorage.app',
+    apiKey: 'AIzaSyCTjj4VXrHaq8db-kVkEGrmUWyOpdnRYwM',
+    appId: '1:550051810513:web:b519143cd5f0ea4f7689f0',
+    messagingSenderId: '550051810513',
+    projectId: 'ic-posto',
+    authDomain: 'ic-posto.firebaseapp.com',
+    storageBucket: 'ic-posto.firebasestorage.app',
+    measurementId: 'G-QYE46V9YTM', // opcional
   );
+
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCCR-UZev8vG_HR7-iuGWY1CFtwgj8oBZw',
-    appId: '1:860433568497:android:442e1c9eb18d0da4754f50',
-    messagingSenderId: '860433568497',
-    projectId: 'app-posto-ic',
-    storageBucket: 'app-posto-ic.firebasestorage.app',
+    apiKey: 'AIzaSyDB39SQ6Ows0APr_MG1KE-D3lNef0UV540',
+    appId: '1:550051810513:android:c708c6fda55d3c1a7689f0',
+    messagingSenderId: '550051810513',
+    projectId: 'ic-posto',
+    storageBucket: 'ic-posto.firebasestorage.app',
   );
 
+
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCnodjMT7lR0fLm2WRoMFBJ4q1-Xd6Sncc',
-    appId: '1:860433568497:ios:e281eb220acba323754f50',
-    messagingSenderId: '860433568497',
-    projectId: 'app-posto-ic',
-    storageBucket: 'app-posto-ic.firebasestorage.app',
-    iosBundleId: 'com.example.virtualTherapyApp',
+    apiKey: 'AIzaSyCuIfotFaRaecebKV2EXS_OXxbOVsD-LKk',
+    appId: '1:550051810513:ios:27a8690de2fa91327689f0',
+    messagingSenderId: '550051810513',
+    projectId: 'ic-posto',
+    storageBucket: 'ic-posto.firebasestorage.app',
+    iosBundleId: 'com.icposto',
   );
+
 }

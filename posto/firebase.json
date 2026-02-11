@@ -1,1 +1,72 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"app-posto-ic","appId":"1:860433568497:android:442e1c9eb18d0da4754f50","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"app-posto-ic","configurations":{"android":"1:860433568497:android:442e1c9eb18d0da4754f50","ios":"1:860433568497:ios:e281eb220acba323754f50","web":"1:860433568497:web:dba9753d3a524f95754f50"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "app-posto-ic",
+          "appId": "1:860433568497:android:442e1c9eb18d0da4754f50",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "app-posto-ic",
+          "configurations": {
+            "android": "1:860433568497:android:442e1c9eb18d0da4754f50",
+            "ios": "1:860433568497:ios:e281eb220acba323754f50",
+            "web": "1:860433568497:web:dba9753d3a524f95754f50"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "cloud_functions/functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ],
+  "emulators": {
+    "apphosting": {
+      "port": 5002,
+      "rootDirectory": "./"
+    },
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

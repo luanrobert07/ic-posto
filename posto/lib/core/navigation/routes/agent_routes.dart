@@ -37,7 +37,7 @@ List<GoRoute> agentRoutes = [
     routes: [
       GoRoute(
         path: '/home',
-        builder: (context, state) => const AgentHomeScreen(),
+        builder: (context, state) => const AgentDashboardScreen(),
         redirect: _checkAccess,
       ),
     ],

@@ -31,13 +31,15 @@ class MessageList extends StatelessWidget {
     return Expanded(
       flex: 5,
       child: Card(
-        margin: EdgeInsets.all(8),
+        margin: const EdgeInsets.all(8),
         elevation: 6,
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: ConditionalWidget(
             condition: chat != null,
-            whenFalse: (context) => Center(child: Text('Select a person to start chatting')),
+            whenFalse: (context) => const Center(
+              child: Text('Selecione uma pessoa para iniciar o chat'),
+            ),
             whenTrue: (context) => Column(
               children: [
                 if (title != null)
@@ -49,23 +51,26 @@ class MessageList extends StatelessWidget {
                 Expanded(
                   child: ConditionalWidget(
                     condition: isLoadingMessages,
-                    whenTrue: (context) => const Center(child: CircularProgressIndicator()),
+                    whenTrue: (context) =>
+                        const Center(child: CircularProgressIndicator()),
                     whenFalse: (context) => ConditionalWidget(
                       condition: chat!.messageCache.isNotEmpty,
-                      whenFalse: (context) => const Center(child: Text('Send a message to start chat')),
+                      whenFalse: (context) => const Center(
+                        child: Text('Envie uma mensagem para iniciar o chat'),
+                      ),
                       whenTrue: (context) => InfiniteScrollList(
                         fetchMoreData: fetchMoreData,
                         isLoadingMore: isLoadingMoreMessages,
                         canLoadMore: chat!.canLoadMoreMessages,
-                        padding: EdgeInsets.all(14),
+                        padding: const EdgeInsets.all(14),
                         reverse: true,
                         itemCount: chat!.messageCache.length,
                         itemBuilder: (context, id) {
                           final message = chat!.messageCache[id];
-
                           return MessageWidget(
                             message: message,
-                            isSender: message.sentBy == FirebaseAuth.instance.currentUser?.uid,
+                            isSender: message.sentBy ==
+                                FirebaseAuth.instance.currentUser?.uid,
                             isLoadingDate: message.sent == null,
                           );
                         },
@@ -79,28 +84,38 @@ class MessageList extends StatelessWidget {
                       Expanded(
                         child: TextField(
                           controller: messageTextController,
+                          style: const TextStyle(
+                            fontSize: 13, // texto menor
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Digite sua mensagem...',
+                            hintStyle: const TextStyle(
+                              fontSize: 17, // placeholder menor
+                              color: Colors.grey,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                          ),
                           onSubmitted: (value) {
                             if (!chat!.isReady) {
-                              print('Tried to send message while chat is still loading');
+                              print(
+                                  'Tried to send message while chat is still loading');
                               return;
                             }
-
                             if (onSend != null) {
                               onSend!();
                             }
                           },
-                          decoration: InputDecoration(
-                            hintText: 'Type a message...',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          ),
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       IconButton(
-                        icon: Icon(Icons.send),
+                        icon: const Icon(Icons.send),
                         onPressed: onSend,
                       ),
                     ],
