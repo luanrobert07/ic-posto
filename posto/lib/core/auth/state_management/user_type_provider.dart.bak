@@ -1,8 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:posto/core/auth/state_management/user_type.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../utils/supabase_functions_endpoints.dart';
+import '../../utils/cloud_functions_endpoints.dart';
 
 part 'user_type_provider.g.dart';
 
@@ -36,41 +36,34 @@ class UserTypeNotifier extends _$UserTypeNotifier {
 
   Future<void> getUserType() async {
     print('Getting user type');
-    final supabase = Supabase.instance.client;
-    final user = supabase.auth.currentUser;
-
-    if (user == null) {
+    if (FirebaseAuth.instance.currentUser == null) {
       state = UserType.notLoggedIn;
       return;
     }
 
-    // Refresh session to get latest metadata
-    try {
-      await supabase.auth.refreshSession();
-    } catch (e) {
-      print('Error refreshing session: $e');
+    final idTokenResult = await FirebaseAuth.instance.currentUser!.getIdTokenResult(true);
+    final claims = idTokenResult.claims;
+
+    if (claims == null) {
+      throw Exception('No claims found');
     }
 
-    final metadata = supabase.auth.currentUser?.appMetadata;
-
-    if (metadata == null || !metadata.containsKey('user_type')) {
+    if (!claims.containsKey('userType')) {
       print('User has no type');
       state = UserType.none;
       return;
     }
 
-    final userType = metadata['user_type'];
-    print('User type: $userType');
-
-    if (userType == 'patient') {
+    print('User type: ${claims['userType']}');
+    if (claims['userType'] == 'patient') {
       state = UserType.patient;
       return;
     }
-    if (userType == 'professional') {
+    if (claims['userType'] == 'professional') {
       state = UserType.professional;
       return;
     }
-    if (userType == 'agent') {
+    if (claims['userType'] == 'agent') {
       state = UserType.agent;
       return;
     }

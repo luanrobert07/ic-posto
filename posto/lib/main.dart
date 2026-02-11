@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -8,9 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:posto/core/utils/themes.dart';
 import 'package:flutter/services.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/utils/l10n/app_localizations.dart';
-import 'firebase_options.dart';
+import 'supabase_options.dart';
 import 'core/navigation/router.dart';
 
 Future main() async {
@@ -19,14 +18,15 @@ Future main() async {
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
   await Future.wait([
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]),
-    Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]),
+    Supabase.initialize(
+      url: SupabaseOptions.supabaseUrl,
+      anonKey: SupabaseOptions.supabaseAnonKey,
     ),
   ]);
-  FirebaseFirestore.instance.settings = const Settings(
-    persistenceEnabled: true,
-  );
 
   runApp(
     ProviderScope(

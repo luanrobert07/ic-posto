@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../utils/supabase_functions_endpoints.dart';
 
-part 'user_type_provider.g.dart';
+part 'user_type_provider_supabase.g.dart';
 
 @Riverpod(keepAlive: true)
 class UserTypeNotifier extends _$UserTypeNotifier {
